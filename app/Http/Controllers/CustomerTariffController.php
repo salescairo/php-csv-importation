@@ -2,84 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportRequest;
+use App\Jobs\TarrifsPreparation;
+use App\Models\Customer;
 use App\Models\CustomerTariff;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class CustomerTariffTariffController extends Controller
+class CustomerTariffController extends Controller
 {
- 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index() : JsonResponse
+
+
+    public function index(): JsonResponse
     {
         $customerTariff =  CustomerTariff::paginate(15);
-        return response()->json($customerTariff,200);
+        return response()->json($customerTariff, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Request $request) : JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $customerTariff = new CustomerTariff();
         $customerTariff->fill($request->all());
         $customerTariff->save();
-        return response()->json($customerTariff,201);
+        return response()->json($customerTariff, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  $id 
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show($id) : JsonResponse
+    public function show(CustomerTariff $customerTariff): JsonResponse
     {
-        $customerTariff = CustomerTariff::find($id);
-        if(!$customerTariff){
-            return response()->json('TARIFA NÃO ENCONTRADA',404);
-        }
-        return response()->json($customerTariff,200);
+        return response()->json($customerTariff, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  $id 
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Request $request, $id) : JsonResponse
+    public function update(Request $request, CustomerTariff $customerTariff): JsonResponse
     {
-        $customerTariff = CustomerTariff::find($id);
-        if(!$customerTariff){
-            return response()->json('TARIFA NÃO ENCONTRADA',404);
-        }
         $customerTariff->fill($request->all());
         $customerTariff->save();
-        return response()->json($customerTariff,200);
+        return response()->json($customerTariff, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  $id 
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy($id) : JsonResponse
+    public function destroy(CustomerTariff $customerTariff): JsonResponse
     {
-        $customerTariff = CustomerTariff::find($id);
-        if(!$customerTariff){
-            return response()->json('TARIFA NÃO ENCONTRADA',404);
-        }
         $customerTariff->delete();
-        return response()->json(null,204);
+        return response()->json(null, 204);
+    }
+
+    public function import(ImportRequest $request, Customer $customer): JsonResponse
+    {
+        TarrifsPreparation::dispatch($customer, $request->file('csv')->store('temp'))->delay(now());
+        return response()->json('PROCESSO DE IMPORTAÇÃO FOI INICIADO', 200);
     }
 }
