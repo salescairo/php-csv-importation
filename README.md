@@ -18,4 +18,4 @@ php artisan queue:work --tries=10 --timeout=3000 --memory=4096
 - https://documenter.getpostman.com/view/13570709/UzQvtQen
 
 ## BANCO DE DADOS
-![alt text](https://github.com/salescairo/php-csv-importation/main/storage/app/others/db.png?raw=true)
+![alt text](https://github.com/salescairo/php-csv-importation/storage/app/others/db.png?raw=true)
