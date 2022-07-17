@@ -1,7 +1,7 @@
 
 
 ## IMPORTAÇÃO DE CSV
-Importação de dados de um arquivo csv de dados de rotas de frete de clientes para um aplicação laravel. 
+Importação de arquivos csv de dados de frete de clientes para um aplicação laravel. 
 
 ## INSTALAÇÃO
 Criar estrutura do banco de dados
